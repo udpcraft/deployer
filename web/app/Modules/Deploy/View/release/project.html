@@ -1,0 +1,98 @@
+<div class="row">
+  <div class="col-xs-12">
+    <div class="box box-info">
+      <div class="box-header with-border">
+        <h3 class="box-title">Horizontal Form</h3>
+      </div>
+      <!-- /.box-header -->
+      <!-- form start -->
+      <form action="" method="post" id="userForm" Class="form-horizontal">
+        <div class="box-body">
+          <div class="form-group">
+            <label for="env" class="col-sm-2 control-label">Env</label>
+            <div class="col-sm-10">
+              <input type="text" name="userForm[env]" class="form-control" value="<?php echo \Helper\Project::getEnv($env);?>" disabled>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="groups" class="col-sm-2 control-label">Groups</label>
+            <div class="col-sm-10">
+              <input type="text" name="userForm[groups]" class="form-control" value="<?php echo \Helper\Project::getGroup($groups);?>" disabled>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="projectname" class="col-sm-2 control-label">Name</label>
+            <div class="col-sm-10">
+              <input type="text" name="userForm[name]" class="form-control" value="<?php echo $name;?>" disabled>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="path" class="col-sm-2 control-label">Path</label>
+            <div class="col-sm-10">
+              <input type="text" name="userForm[path]" class="form-control" value="<?php echo \Helper\Project::getDeployPath($path);?>" disabled>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="release_type_value" class="col-sm-2 control-label">Release Type</label>
+            <div class="col-sm-3">
+              <select class="form-control" name="userForm[release_type]" >
+                <?php foreach(\Helper\Project::getReleaseType() as $typeId => $typeName): ?>
+                <option value="<?php echo $typeId; ?>" <?php if($release_type == $typeId): ?>selected<?php endif; ?>><?php echo $typeName; ?></option>
+                <?php endforeach; ?>
+              </select>
+            </div>
+            <div class="col-sm-7">
+              <input type="text" name="userForm[release_type_value]" class="form-control" id="release_type_value">
+            </div>
+          </div>
+
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer">
+          <button type="button" class="btn btn-default cancel">Cancel</button>
+          <button type="submit" class="btn btn-info pull-right">Confirm</button>
+        </div>
+        <!-- /.box-footer -->
+      </form>
+    </div>
+    <!-- /.box -->
+  </div>
+  <!-- /.col -->
+</div>
+<!-- /.row -->
+
+<script>
+  $(function () {
+    $('#userForm').bootstrapValidator({
+      //        live: 'disabled',
+      message: 'This value is not valid',
+      feedbackIcons: {
+        valid: 'glyphicon glyphicon-ok',
+        invalid: 'glyphicon glyphicon-remove',
+        validating: 'glyphicon glyphicon-refresh'
+      },
+      fields: {
+        'userForm[release_type_value]': {
+          validators: {
+            notEmpty: {
+              message: 'The release type value is required and cannot be empty'
+            }
+          }
+        },
+      }
+    });
+
+
+  });
+
+</script>
+<script>
+  $(function(){
+    var formAction=location.pathname+'.json?'+(location.href.split('?')[1]?location.href.split('?')[1]:'');
+    var sId=(location.href.split('?')[1]?location.href.split('?')[1]:'');
+    var processApi='/deploy/process/release.json?'+sId;
+    $('#userForm').ajaxPostForm({formAction:formAction,processApi:processApi});
+
+  })
+</script>

@@ -1,0 +1,202 @@
+#! /bin/sh
+
+php_prefix=/opt/udp-deployer/envs/local/php
+
+php_fpm_BIN=${php_prefix}/sbin/php-fpm
+php_fpm_CONF=${php_prefix}/etc/php-fpm.conf
+php_fpm_INI=${php_prefix}/etc/php.ini
+php_fpm_PID=${php_prefix}/var/run/php-fpm.pid
+
+php_opts="-p $php_prefix --fpm-config $php_fpm_CONF -c $php_fpm_INI --pid $php_fpm_PID"
+
+nginx_prefix=/opt/udp-deployer/envs/local/nginx
+
+nginx_BIN=${nginx_prefix}/sbin/nginx
+nginx_CONF=${nginx_prefix}/conf/nginx.conf
+nginx_PID=${nginx_prefix}/logs/nginx.pid
+
+nginx_opts="-p $nginx_prefix -c $nginx_CONF"
+
+
+wait_for_pid () {
+	try=0
+
+	while test $try -lt 35 ; do
+
+		case "$1" in
+			'created')
+			if [ -f "$2" ] ; then
+				try=''
+				break
+			fi
+			;;
+
+			'removed')
+			if [ ! -f "$2" ] ; then
+				try=''
+				break
+			fi
+			;;
+		esac
+
+		echo -n .
+		try=`expr $try + 1`
+		sleep 1
+
+	done
+
+}
+
+case "$1" in
+	start)
+		echo "Starting udp-deployer"
+        echo
+
+		$php_fpm_BIN --daemonize $php_opts
+
+		if [ "$?" != 0 ] ; then
+			echo " start fpm failed"
+			exit 1
+		fi
+
+		wait_for_pid created $php_fpm_PID
+
+		if [ -n "$try" ] ; then
+			echo " start fpm failed"
+			exit 1
+		else
+			echo "fpm done"
+		fi
+
+        echo
+        
+        $nginx_BIN $nginx_opts
+
+		if [ "$?" != 0 ] ; then
+			echo " start nginx failed"
+			exit 1
+		fi
+
+		wait_for_pid created $nginx_PID
+
+		if [ -n "$try" ] ; then
+			echo " start nginx failed"
+			exit 1
+		else
+			echo "nginx done"
+		fi
+
+        echo
+	;;
+
+	stop)
+		echo "Gracefully shutting down udp-deployer"
+
+		if [ ! -r $php_fpm_PID ] ; then
+			echo "warning, no pid file found - php-fpm is not running ?"
+			exit 1
+		fi
+
+		kill -QUIT `cat $php_fpm_PID`
+
+		wait_for_pid removed $php_fpm_PID
+
+		if [ -n "$try" ] ; then
+			echo " failed. Use force-quit"
+			exit 1
+		else
+			echo -e " fpm done\n"
+		fi
+
+        if [ ! -r $nginx_PID ] ; then
+			echo "warning, no pid file found - nginx is not running ?"
+			exit 1
+		fi
+
+        echo
+
+		kill -QUIT `cat $nginx_PID`
+
+		wait_for_pid removed $nginx_PID
+
+		if [ -n "$try" ] ; then
+			echo " failed. Use force-quit"
+			exit 1
+		else
+			echo " nginx done"
+		fi
+
+        echo
+	;;
+
+	force-quit)
+		echo "Terminating udp-deployer "
+        echo
+
+		if [ ! -r $php_fpm_PID ] ; then
+			echo "warning, no pid file found - php-fpm is not running ?"
+			exit 1
+		fi
+
+		kill -TERM `cat $php_fpm_PID`
+
+		wait_for_pid removed $php_fpm_PID
+
+		if [ -n "$try" ] ; then
+			echo " failed"
+			exit 1
+		else
+			echo " fpm done"
+		fi
+
+		if [ ! -r $nginx_PID ] ; then
+			echo "warning, no pid file found - nginx is not running ?"
+			exit 1
+		fi
+
+		kill -TERM `cat $nginx_PID`
+
+		wait_for_pid removed $nginx_PID
+
+		if [ -n "$try" ] ; then
+			echo " failed"
+			exit 1
+		else
+			echo "nginx done"
+		fi        
+	;;
+
+	restart)
+		$0 stop
+		$0 start
+	;;
+
+	reload)
+
+		echo "Reload service udp-deployer "
+
+		if [ ! -r $php_fpm_PID ] ; then
+			echo "warning, no pid file found - php-fpm is not running ?"
+			exit 1
+		fi
+
+		kill -USR2 `cat $php_fpm_PID`
+
+		echo " fpm done"
+
+		if [ ! -r $nginx_PID ] ; then
+			echo "warning, no pid file found - nginx is not running ?"
+			exit 1
+		fi
+
+		kill -USR2 `cat $nginx_PID`
+
+		echo " nginx done"        
+	;;
+
+	*)
+		echo "Usage: $0 {start|stop|force-quit|restart|reload}"
+		exit 1
+	;;
+
+esac

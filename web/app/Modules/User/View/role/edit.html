@@ -1,0 +1,146 @@
+<div class="row">
+  <div class="col-xs-12">
+    <div class="box box-info">
+      <div class="box-header with-border">
+        <h3 class="box-title">Horizontal Form</h3>
+      </div>
+      <!-- /.box-header -->
+      <!-- form start -->
+      <form action="" method="post" id="defaultForm" class="form-horizontal">
+        <div class="box-body">
+          <div class="form-group">
+            <label for="rolename" class="col-sm-2 control-label">Rolename</label>
+
+            <div class="col-sm-10">
+              <input type="text" name="rolename" class="form-control" id="rolename" value="<?php echo $name;?>">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="description" class="col-sm-2 control-label">Description</label>
+
+            <div class="col-sm-10">
+              <input type="text" name="description" class="form-control" id="description" value="<?php echo $description;?>">
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="permission" class="col-sm-2 control-label">Permission</label>
+            <div class="col-sm-10">
+              <?php
+              foreach ($permission_list as $group => $resources):
+              ?>
+              <div>
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" class="check-title" value="<?php echo $group;?>"><?php echo $group;?>
+                  </label>
+                </div>
+                <div class="check-group checkbox col-sm-offset-1">
+                  <?php
+                  foreach ($resources as $name => $action):
+                  ?>
+                  <label>
+                    <input type="checkbox"  name="permission[]" value="<?php echo $action;?>" <?php if (in_array($action, $permission)){echo "checked";}?>><?php echo $name;?>
+                  </label>
+                  <?php
+                  endforeach;
+                  ?>
+                </div>
+              </div>
+              <?php
+              endforeach;
+              ?>
+            </div>
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer">
+          <button type="button" class="btn btn-default cancel">Cancel</button>
+          <button type="submit" class="btn btn-info pull-right">Confirm</button>
+        </div>
+        <!-- /.box-footer -->
+      </form>
+    </div>
+    <!-- /.box -->
+  </div>
+  <!-- /.col -->
+</div>
+<!-- /.row -->
+<script>
+  $(function () {
+
+    $('#defaultForm').bootstrapValidator({
+      //        live: 'disabled',
+      message: 'This value is not valid',
+      feedbackIcons: {
+        valid: 'glyphicon glyphicon-ok',
+        invalid: 'glyphicon glyphicon-remove',
+        validating: 'glyphicon glyphicon-refresh'
+      },
+      fields: {
+        rolename: {
+          validators: {
+            notEmpty: {
+              message: 'The role name is required and cannot be empty'
+            }
+          }
+        },
+        description: {
+          validators: {
+            notEmpty: {
+              message: 'The role description is required and cannot be empty'
+            }
+          }
+        },
+        'permission[]': {
+          validators: {
+            notEmpty: {
+              message: 'choice min 1'
+            }
+          }
+        },
+      }
+    });
+
+
+  });
+</script>
+
+<script>
+  $(function(){
+    var fnControllerDom=function() {
+      var $allPower = $('.check-title');
+      $allPower.on('click', function () {
+        var isValid=false;
+        var $child=$(this).parent().parent().siblings().children().find('input');
+        var $thisCkValue = $(this).prop('checked');
+        $child.prop('checked', $thisCkValue);
+        $('#defaultForm').data('bootstrapValidator').updateStatus('permission[]', 'NOT_VALIDATED', null).validateField('permission[]');
+
+      });
+      var $checkGroup = $('.check-group');
+      $checkGroup.on('click', 'input[type="checkbox"]', function () {
+        var flag = false;
+        $(this).parent().parent().find('input[type="checkbox"]').each(function () {
+          if($(this).prop('checked')){
+            flag=true;
+          }
+        });
+        $(this).parent().parent().siblings().find('input[type="checkbox"]').prop('checked', flag);
+      });
+    }
+
+    var bindFatherCheck=function(){
+      var $checkGroup=$('.check-group input');
+      $checkGroup.each(function(){
+          if($(this).prop('checked')){
+            var $parent=$(this).parent().parent().siblings().find('input');
+            if(!$parent.prop('checked')) {
+              $parent.prop('checked', 'checked');
+            }
+          }
+      })
+    }
+    bindFatherCheck();
+    fnControllerDom();
+  });
+</script>

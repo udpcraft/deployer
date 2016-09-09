@@ -1,0 +1,93 @@
+<div class="row">
+  <div class="col-xs-12">
+    <div class="box box-info">
+      <div class="box-header with-border">
+        <h3 class="box-title">Horizontal Form</h3>
+      </div>
+      <!-- /.box-header -->
+      <!-- form start -->
+      <form action="" method="post" id="userForm" class="form-horizontal">
+        <div class="box-body">
+          <div class="form-group">
+            <label for="username" class="col-sm-2 control-label">Username</label>
+
+            <div class="col-sm-10">
+              <input type="text" name="userForm[name]" class="form-control" id="username" value="<?php echo $name;?>">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="password" class="col-sm-2 control-label">Password</label>
+
+            <div class="col-sm-10">
+              <input type="password" name="userForm[password]" class="form-control" id="password" value="<?php echo $password;?>" placeholder="Password">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="permission" class="col-sm-2 control-label">Role</label>
+            <div class="col-sm-10">
+              <?php
+              foreach ($roles as $role):
+              ?>
+              <div class="checkbox">
+                <label><input type="checkbox" name="roleForm[role][]" value="<?php echo $role['id']?>" <?php if (in_array($role['id'], $current_roles)):?>checked<?php endif;?>><?php echo $role['name'];?></label>
+              </div>
+              <?php
+              endforeach;
+              ?>
+            </div>
+          </div>
+
+          
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer">
+          <button type="button" class="btn btn-default cancel">Cancel</button>
+          <button type="submit" class="btn btn-info pull-right">Confirm</button>
+        </div>
+        <!-- /.box-footer -->
+      </form>
+    </div>
+    <!-- /.box -->
+  </div>
+  <!-- /.col -->
+</div>
+<!-- /.row -->
+<script>
+  $(function () {
+
+    $('#userForm').bootstrapValidator({
+      //        live: 'disabled',
+      message: 'This value is not valid',
+      feedbackIcons: {
+        valid: 'glyphicon glyphicon-ok',
+        invalid: 'glyphicon glyphicon-remove',
+        validating: 'glyphicon glyphicon-refresh'
+      },
+      fields: {
+        'userForm[name]': {
+          validators: {
+            notEmpty: {
+              message: 'The user name is required and cannot be empty'
+            }
+          }
+        },
+        'userForm[password]': {
+          validators: {
+            notEmpty: {
+              message: 'The user password is required and cannot be empty'
+            }
+          }
+        },
+        'roleForm[role][]': {
+          validators: {
+            choice: {
+              min: 1,
+              message: 'Please choose least 1 role'
+            }
+          }
+        },
+      }
+    });
+    
+  });
+</script>

@@ -1,0 +1,105 @@
+<?php
+include(Afanty\Config\Env::getRootDir() . '/app/Modules/Site/View/layouts/header.html');
+?>
+      <!-- Left side column. contains the logo and sidebar -->
+      <aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <?php
+        include(Afanty\Config\Env::getRootDir() . '/app/Modules/Site/View/widgets/left_menu.html');
+        ?>
+        <!-- /.sidebar -->
+      </aside>
+
+      
+      <!-- Content Wrapper. Contains page content -->
+      <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+          <h1>
+            <small></small>
+          </h1>
+          <ol class="breadcrumb">
+            <li><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li><a href="<?php echo $_param['indexAction']; ?>"><?php echo \Afanty\Routing\Router::getInstance()->getController(); ?></a></li>
+            <li class="active"><?php echo \Afanty\Routing\Router::getInstance()->getAction(); ?></li>
+          </ol>
+        </section>
+
+        <!-- jQuery 2.2.3 -->
+        <script src="/static/plugins/jQuery/jquery-2.2.3.min.js"></script>
+        <!-- Bootstrap 3.3.6 -->
+        <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+        <!-- DataTables -->
+      <!--  <script src="/static/plugins/datatables/jquery.dataTables.min.js"></script>
+        <script src="/static/plugins/datatables/dataTables.bootstrap.min.js"></script>-->
+        <!-- AdminLTE App -->
+        <script src="/static/dist/js/app.min.js"></script>
+        <!-- AdminLTE for demo purposes -->
+        <script src="/static/dist/js/demo.js"></script>
+
+        <!-- iCheck -->
+        <!--<script src="/static/plugins/iCheck/icheck.min.js"></script>-->
+        <script src="/static/validator/dist/js/bootstrapValidator.js"></script>
+        <script src="/static/dist/js/main.js"></script>
+        <script>
+          /*表单提交插入隐藏域
+           $('form').on('submit',function(){
+           //获取meta标签的值
+           var token = $('meta[name="csrf-token"]').attr('content');
+           if($('input[name=csrf]').length==0) {
+           $('<input type="hidden" name="csrf" value="' + token + '">').appendTo($(this));
+           }
+           return false;
+           })
+           */
+         /* $(function(){
+            $('#callout').timerStart({leftTime:30,closeCallBack:function(){
+              //发送ajax请求进行操作。
+            }})
+          })
+*/
+        </script>
+        <div class="modal modal-warning" id="modal-delete">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Warning Modal</h4>
+              </div>
+              <div class="modal-body">
+                <p>Are you sure delete？</p>
+                <input type="text" id="modal-id" value="" hidden="hidden" />
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-outline btn-ok">Confirm</button>
+              </div>
+            </div>
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+        </div>
+        
+        <!-- Main content -->
+        <section class="content">
+
+          <!--这是顶部倒计时提示框-->
+        <div class="callout callout-warning" style="display: none" id="callout">
+            <button type="button" class="close"><span aria-hidden="true">x</span><span class="sr-only">关闭</span></button>
+            <p class="text-center">you have left <span id="leftTime" style="font-size:20px;font-weight: bold"></span> seconds</p>
+          </div>
+
+      
+<?php
+include($_param['viewFile']);
+?>
+
+       
+<?php
+if (! empty($_pageHtml)) {
+  echo $_pageHtml;
+}
+
+include(Afanty\Config\Env::getRootDir() . '/app/Modules/Site/View/layouts/footer.html');
+?>

@@ -1,0 +1,27 @@
+        </section>
+        <!-- /.content -->
+      </div>
+      <!-- /.content-wrapper -->
+
+      <footer class="main-footer">
+
+        <strong>Copyright &copy; <?php echo date('Y');?> <?php echo \Afanty\Config\Env::getConfig('common', 'copyright'); ?>.</strong> All rights
+        reserved.
+      </footer>
+
+      <!-- Add the sidebar's background. This div must be placed
+           immediately after the control sidebar -->
+      <div class="control-sidebar-bg"></div>
+      </div>
+      <!-- ./wrapper -->
+
+      <script>
+        $(function () {
+          $('.box-footer .cancel').click(function(){
+            window.location.href="<?php echo $_param['indexAction'];?>";
+          });
+        });
+      </script>
+      
+  </body>
+</html>

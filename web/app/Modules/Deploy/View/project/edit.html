@@ -1,0 +1,194 @@
+<div class="row">
+  <div class="col-xs-12">
+    <div class="box box-info">
+      <div class="box-header with-border">
+        <h3 class="box-title">Horizontal Form</h3>
+      </div>
+      <!-- /.box-header -->
+      <!-- form start -->
+      <form action="" method="post" id="userForm" Class="form-horizontal">
+        <div class="box-body">
+          <div class="form-group">
+            <label for="env" class="col-sm-2 control-label">Env</label>
+            <div class="col-sm-10">
+              <select class="form-control" name="userForm[env]" >
+                <?php foreach(\Helper\Project::getEnv() as $envId => $envName): ?>
+                  <option value="<?php echo $envId; ?>" <?php if($env == $envId): ?>selected<?php endif; ?>><?php echo $envName; ?></option>
+                <?php endforeach; ?>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="groups" class="col-sm-2 control-label">Groups</label>
+            <div class="col-sm-10">
+              <select class="form-control" name="userForm[groups]" >
+                <?php foreach(\Helper\Project::getGroup() as $groupId => $groupName): ?>
+                <option value="<?php echo $groupId; ?>" <?php if($groups == $groupId): ?>selected<?php endif; ?>><?php echo $groupName; ?></option>
+                <?php endforeach; ?>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="projectname" class="col-sm-2 control-label">Name</label>
+            <div class="col-sm-10">
+              <input type="text" name="userForm[name]" class="form-control" id="projectname" value="<?php echo $name; ?>">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="path" class="col-sm-2 control-label">Path</label>
+            <div class="col-sm-10">
+              <input type="text" name="userForm[path]" class="form-control" id="path" value="<?php echo $path ?>">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="vcs" class="col-sm-2 control-label">VCS</label>
+            <div class="col-sm-10">
+              <select class="form-control" name="userForm[vcs]" >
+                <?php foreach(\Helper\Project::getVcs() as $vcsId => $vcsName): ?>
+                <option value="<?php echo $vcsId; ?>" <?php if ($vcsId == $vcs): ?>selected<?php endif; ?>><?php echo $vcsName; ?></option>
+                <?php endforeach; ?>
+              </select>              
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="repos_url" class="col-sm-2 control-label">Repos Url</label>
+            <div class="col-sm-10">
+              <input type="text" name="userForm[repos_url]" class="form-control" id="repos_url" value="<?php echo $repos_url; ?>">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="sync_user" class="col-sm-2 control-label">sync_user</label>
+            <div class="col-sm-10">
+              <input type="text" name="userForm[sync_user]" class="form-control" id="sync_user" value="<?php echo $sync_user; ?>">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="hosts" class="col-sm-2 control-label">hosts</label>
+            <div class="col-sm-10">
+              <textarea rows="3" name="userForm[hosts]" class="form-control" id="hosts"><?php echo $hostStr; ?></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="port" class="col-sm-2 control-label">port</label>
+            <div class="col-sm-10">
+              <input type="text" name="userForm[port]" class="form-control" id="port" value="<?php echo $port; ?>">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="before_script" class="col-sm-2 control-label">before_script</label>
+            <div class="col-sm-10">
+              <input type="text" name="userForm[before_script]" class="form-control" id="before_script" value="<?php echo $before_script; ?>">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="after_script" class="col-sm-2 control-label">after_script</label>
+            <div class="col-sm-10">
+              <input type="text" name="userForm[after_script]" class="form-control" id="after_script" value="<?php echo $after_script; ?>">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="permission" class="col-sm-2 control-label">Role</label>
+            <div class="col-sm-10">
+              <?php
+              foreach ($role_lists as $role):
+              ?>
+              <div class="checkbox">
+                <label><input type="checkbox" name="roleForm[role][]" value="<?php echo $role['id']?>" <?php if (in_array($role['id'], $roles)): ?>checked<?php endif; ?>><?php echo $role['name'];?></label>
+              </div>
+              <?php
+              endforeach;
+              ?>
+            </div>
+          </div>
+
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer">
+          <button type="button" class="btn btn-default cancel">Cancel</button>
+          <button type="submit" class="btn btn-info pull-right">Confirm</button>
+        </div>
+        <!-- /.box-footer -->
+      </form>
+    </div>
+    <!-- /.box -->
+  </div>
+  <!-- /.col -->
+</div>
+<!-- /.row -->
+<script>
+  $(function () {
+
+    $('#userForm').bootstrapValidator({
+      //        live: 'disabled',
+      message: 'This value is not valid',
+      feedbackIcons: {
+        valid: 'glyphicon glyphicon-ok',
+        invalid: 'glyphicon glyphicon-remove',
+        validating: 'glyphicon glyphicon-refresh'
+      },
+      fields: {
+        'userForm[name]': {
+          validators: {
+            notEmpty: {
+              message: 'The project name is required and cannot be empty'
+            }
+          }
+        },
+        'userForm[path]': {
+          validators: {
+            notEmpty: {
+              message: 'The project path is required and cannot be empty'
+            }
+          }
+        },
+        'userForm[vcs]': {
+          validators: {
+            notEmpty: {
+              message: 'The vcs type is required and cannot be empty'
+            }
+          }
+        },
+        'userForm[repos_url]': {
+          validators: {
+            notEmpty: {
+              message: 'The repos url is required and cannot be empty'
+            }
+          }
+        },        
+        'userForm[sync_user]': {
+          validators: {
+            notEmpty: {
+              message: 'The sync_user is required and cannot be empty'
+            }
+          }
+        },
+        'userForm[hosts]': {
+          validators: {
+            notEmpty: {
+              message: 'The hosts is required and cannot be empty'
+            }
+          }
+        },
+        'userForm[port]': {
+          validators: {
+            notEmpty: {
+              message: 'The port is required and cannot be empty'
+            }
+          }
+        },
+        'roleForm[role][]': {
+          validators: {
+            choice: {
+              min: 1,
+              message: 'Please choose least 1 role'
+            }
+          }
+        },
+      }
+    });
+
+
+  });
+</script>
+

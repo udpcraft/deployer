@@ -1,0 +1,45 @@
+<!-- Left side column. contains the logo and sidebar -->
+  <!-- sidebar: style can be found in sidebar.less -->
+  <section class="sidebar">
+    <!-- Sidebar user panel -->
+    <!-- search form -->
+    <!-- /.search form -->
+    <!-- sidebar menu: : style can be found in sidebar.less -->
+    <ul class="sidebar-menu">
+      <?php
+      $_leftMenu = [];
+      $_leftMenu['module'] = \Afanty\Routing\Router::getInstance()->getModule();
+      $_leftMenu['controller'] = \Afanty\Routing\Router::getInstance()->getController();
+      
+      foreach (\Components\Permission::configs() as $_blockName => $_blocks):
+      ?>
+        <li class="header"><?php echo $_blockName; ?></li>
+        <?php
+        foreach ($_blocks as $_groupName => $_groups):
+        ?>
+          <li <?php if($_leftMenu['module'] == $_groupName): ?> class="treeview active" <?php else: ?> class="treeview" <?php endif; ?>>
+        <a href="#">
+          <i class="fa fa-users"></i> <span><?php echo $_groupName; ?></span>
+          <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+          </span>
+        </a>
+        <ul class="treeview-menu">
+          <?php
+          foreach ($_groups as $_menuName => $_menuRes):
+          ?>
+          <li <?php if(strpos($_menuRes['menu-index'], sprintf('/%s/%s', $_leftMenu['module'], $_leftMenu['controller'])) === 0): ?>class="active"<?php endif; ?>><a href="<?php echo $_menuRes['menu-index']; ?>"><i class="fa fa-angle-double-right"></i><?php echo $_menuName; ?> </a></li>
+          <?php
+          endforeach;
+          ?>
+        </ul>
+      </li>
+      <?php
+      endforeach;
+      ?>
+      <?php
+      endforeach;
+      ?>
+    </ul>
+  </section>
+  <!-- /.sidebar -->

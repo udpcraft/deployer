@@ -1,0 +1,64 @@
+
+<div class="row">
+  <div class="col-xs-12">
+    <div class="box">
+      <div class="box-header">
+        <p>
+          <a class="btn btn-success" href="/deploy/project/create">Create Project</a>
+        </p>
+      </div>
+      <!-- /.box-header -->
+      <div class="box-body">
+        <table id="example2" class="table table-bordered table-hover">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Env</th>              
+              <th>Groups</th>
+              <th>Name</th>
+              <th>in_time</th>
+              <th>up_time</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php
+            foreach ($_res as $row):
+            ?>
+            <tr>
+              <td><?php echo $row['id'];?></td>
+              <td><?php echo \Helper\Project::getEnv($row['env']);?></td>              
+              <td><?php echo \Helper\Project::getGroup($row['groups']);?></td>
+              <td><?php echo $row['name'];?></td>
+              <td><?php echo $row['in_time'];?></td>
+              <td><?php echo $row['up_time'];?></td>
+              <td>
+                <a href="/deploy/project/edit?id=<?php echo $row['id'];?>"><span class="glyphicon glyphicon-edit"></span></a>
+                <a class="row-remove" href="#" href-id="<?php echo $row['id'];?>" ><span class="glyphicon glyphicon-remove"></span></a>
+              </td>
+            </tr>
+            <?php
+            endforeach;
+            ?>
+          </tbody>
+        </table>
+      </div>
+      <!-- /.box-body -->
+    </div>
+    <!-- /.box -->
+  </div>
+  <!-- /.col -->
+</div>
+<!-- /.row -->
+
+
+
+
+<script>
+  $(function(){
+    delData("/deploy/project/delete.json");
+  })
+
+
+
+</script>
