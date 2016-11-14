@@ -33,6 +33,6 @@ class Command
 
     public static function doSudo($user, $command)
     {
-        return $command;
+        return "sudo -u {$user} -H bash -c '$command'";
     }
 }
