@@ -13,7 +13,7 @@ LOG_ROOT=$DEPLOYER_ROOT"/log"
 LOG_DIRS="runtime"
 
 nginx_log_dir=$DEPLOYER_ROOT"/envs/local/nginx/logs"
-fpm_log_dir=$DEPLOYER_ROOT"/envs/local/php/Log"
+fpm_log_dir=$DEPLOYER_ROOT"/envs/local/php/log"
 fpm_var_dir=$DEPLOYER_ROOT"/envs/local/php/var/run"
 # add user
 useradd $DEPLOY_USER
