@@ -13,7 +13,7 @@ LOG_ROOT=$DEPLOYER_ROOT"/log"
 LOG_DIRS="runtime"
 
 nginx_log_dir=$DEPLOYER_ROOT"/envs/local/nginx/logs"
-fpm_log_dir=$DEPLOYER_ROOT"/envs/local/php/log"
+fpm_log_dir=$DEPLOYER_ROOT"/envs/local/php/Log"
 fpm_var_dir=$DEPLOYER_ROOT"/envs/local/php/var/run"
 # add user
 useradd $DEPLOY_USER
@@ -32,6 +32,11 @@ then
     cp $SOURCE_DIR"/shell/deployer" /etc/init.d
     chmod +x /etc/init.d/deployer
 fi
+
+# update nginx and fpm binary file execute permissions
+chmod +x $DEPLOYER_ROOT"/envs/local/php/sbin/php-fpm"
+chmod +x $DEPLOYER_ROOT"/envs/local/nginx/sbin/nginx"
+chmod +x $DEPLOYER_ROOT"/shell/ssh_proxy.sh"
 
 # init deployer env
 if (test ! -f $nginx_log_dir)
